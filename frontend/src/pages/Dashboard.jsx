@@ -75,7 +75,10 @@ const Dashboard = () => {
         <section className="exploreTopics">
             <div className="flex justify-between items-center">
                 <h2>Explore topics</h2>
-                <p className="text-sm text-gray-600 cursor-pointer hover:underline">view all {TOPIC_AMOUNT} →</p>
+                <Link
+                to="/modules"
+                className="text-sm text-gray-600 cursor-pointer hover:underline">view all {TOPIC_AMOUNT} →
+                </Link>
             </div>
             <div className="topicCards grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 ">
                 {
