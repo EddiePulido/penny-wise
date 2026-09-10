@@ -36,7 +36,7 @@ const MultipleChoicePage = Page.discriminator('multiple_choice', new mongoose.Sc
   }],
 }))
 
-const MatchingPage = Page.discriminator('matching', new Schema({
+const MatchingPage = Page.discriminator('matching', new mongoose.Schema({
   pairs: [{
     word: { 
       type: String, 
