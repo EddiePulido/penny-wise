@@ -36,10 +36,18 @@ const MultipleChoicePage = Page.discriminator('multiple_choice', new mongoose.Sc
   }],
 }))
 
-const MatchingPage = Page.discriminator('matching', new mongoose.Schema({
+const MatchingPage = Page.discriminator('matching', new Schema({
   pairs: [{
-    leftSide: { type: String, required: true }, 
-    rightSide: { type: String, required: true }
+    word: { 
+      type: String, 
+      required: [true, 'A word is required'], 
+      trim: true 
+    },
+    definition: { 
+      type: String, 
+      required: [true, 'A definition is required'], 
+      trim: true 
+    }
   }]
 }))
 
