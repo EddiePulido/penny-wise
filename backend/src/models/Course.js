@@ -12,7 +12,7 @@ const courseSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    lessons: [{ type: mongoose.Schema.Types.ObjectId }],
+    lessons: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Lesson' }],
     published: {
       type: Boolean,
       default: false,

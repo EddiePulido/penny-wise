@@ -53,13 +53,12 @@ const userSchema = new mongoose.Schema(
       min: 0,
     },
     country: {
-      type: Schema.Types.ObjectId,
-      default: 'USA',
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'Country',
-      required: true,
-    }
-  }, { timestamps: true },
-)
+    },
+  },
+  { timestamps: true },
+);
 
 // TOOK THESE FROM PULSEBOARD
 // DON'T KNOW WHAT WE'RE DOING FOR AUTHENTICATION

@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const bcrypt = require('bcryptjs')
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const authorSchema = new mongoose.Schema(
   {
@@ -28,8 +28,9 @@ const authorSchema = new mongoose.Schema(
       type: String,
       default: 'default-profile-pic.png',
     },
-  }, { timestamps: true }
-)
+  },
+  { timestamps: true },
+);
 
 authorSchema.methods.comparePassword = function comparePassword(candidate) {
   return bcrypt.compare(candidate, this.passwordHash);
@@ -46,5 +47,4 @@ authorSchema.methods.toJSON = function toJSON() {
   return obj;
 };
 
-module.exports = mongoose.model('Author', authorSchema)
-
+module.exports = mongoose.model('Author', authorSchema);

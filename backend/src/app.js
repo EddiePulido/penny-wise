@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const coursesRouter = require('./routes/courses');
 
 function createApp() {
   const app = express();
@@ -15,6 +16,8 @@ function createApp() {
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok' });
   });
+
+  app.use('/api/courses', coursesRouter);
 
   app.use((req, res) => {
     res.status(404).json({ error: 'Not found' });
