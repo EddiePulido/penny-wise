@@ -17,6 +17,16 @@ const lessonSchema = new mongoose.Schema(
       default: 10,
     },
     pages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Page' }],
+    estimatedDurationOfCompletionInMinutes: {
+      type: Number,
+      default: 15
+    },
+    description: {
+      type: String,
+      trim: true,
+      required: true,
+      maxLength: [400, 'Description cannot exceed 400 characters'] // Array format for custom error message
+    }
   },
   { timestamps: true },
 );
