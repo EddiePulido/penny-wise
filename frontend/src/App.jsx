@@ -29,6 +29,7 @@ function App() {
         <Route path='/modules' element={<ModulesPage />} />
         <Route path='/coursecatalog' element={<CourseCatalog />} />
         <Route path='/errorpage' element={<ErrorPage />} />
+        <Route path='*' element={<ErrorPage />} />
       </Routes>
     </Router>
   );
