@@ -8,7 +8,7 @@ async function createInviteCode() {
     const newInvite = await Invite.create({ code });
     return newInvite.code;
   } catch (error) {
-    if (error.code === 11000) return createInviteCode(daysValid); 
+    if (error.code === 11000) return createInviteCode(); 
     throw error;
   }
 }
