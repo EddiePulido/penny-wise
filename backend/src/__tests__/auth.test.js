@@ -91,7 +91,7 @@ it('returns error with incorrect author invite code', async () => {
     authorInviteCode: 'FAKECODE'
   })
 
-  expect(res.status).toBe(500)
+  expect(res.status).toBe(400)
 })
 
 it('rejects displayName longer than 100 characters', async () => {

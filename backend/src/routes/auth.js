@@ -51,7 +51,7 @@ router.post("/register", async (req, res) => {
       if(authorInviteCode === process.env.AUTHOR_SECRET_CODE){
         user = await Author.create({ email: email.toLowerCase(), displayName, passwordHash });
       }else{
-        return res.status(500).json({ error: 'Invalid author code'})
+        return res.status(400).json({ error: 'Invalid author code'})
       }
     } else {
       user = await Learner.create({ email: email.toLowerCase(), displayName, passwordHash });
