@@ -53,8 +53,4 @@ const Author = User.discriminator('author', new Schema({
   bio: { type: String, trim: true, maxlength: 500 },
 }));
 
-
-
-
-
 module.exports = { User, Learner, Author };
