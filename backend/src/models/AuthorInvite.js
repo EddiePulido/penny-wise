@@ -8,4 +8,4 @@ const authorInviteSchema = new mongoose.Schema({
   }
 })
 
-module.exports = model('AuthorInvite', authorInviteSchema)
+module.exports = mongoose.model('AuthorInvite', authorInviteSchema)
