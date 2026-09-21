@@ -1,9 +1,10 @@
 require('dotenv').config();
+const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const { connectDB } = require('../src/config/db');
 const Country = require('../src/models/country');
 const Money = require('../src/models/money');
-const User = require('../src/models/User');
+const { Author, Learner } = require('../src/models/User');
 const Course = require('../src/models/Course');
 const Lesson = require('../src/models/Lesson');
 const { Page } = require('../src/models/Page');
@@ -12,12 +13,20 @@ const Wallet = require('../src/models/wallet');
 const DEMO_PASSWORD = 'PennyWise-123';
 const USD_COUNTRY = 'United States';
 
-const SEED_USERS = [
+const SEED_AUTHORS = [
   {
     email: 'author@pennywise.app',
     displayName: 'Ama Author',
     role: 'author',
   },
+  {
+    email: 'anotherauthor@pennywise.app',
+    displayName: 'Another Author',
+    role: 'author',
+  },
+];
+
+const SEED_USERS = [
   {
     email: 'learn.sara@pennywise.app',
     displayName: 'Sara Ekon',
@@ -169,7 +178,7 @@ const SEED_COURSES = [
   },
   {
     name: 'Smart Spending',
-    creatorEmail: 'author@pennywise.app',
+    creatorEmail: 'anotherauthor@pennywise.app',
     published: true,
     lessons: [
       {
@@ -326,6 +335,10 @@ async function dropLegacyCollections() {
   }
 }
 
+async function hashPassword(plain) {
+  return bcrypt.hash(plain, 10);
+}
+
 async function seed({ mongoUri } = {}) {
   await connectDB(mongoUri);
 
@@ -353,14 +366,14 @@ async function seed({ mongoUri } = {}) {
 
   const usersByEmail = {};
   for (const seedUser of SEED_USERS) {
-    const passwordHash = await User.hashPassword(DEMO_PASSWORD);
-    const user = await User.findOneAndUpdate(
+    const passwordHash = await hashPassword(DEMO_PASSWORD);
+    const user = await Learner.findOneAndUpdate(
       { email: seedUser.email },
       {
         email: seedUser.email,
         displayName: seedUser.displayName,
         role: seedUser.role,
-        passwordHash,
+        passwordHash: passwordHash,
         country: country._id,
         coursesEnrolled: [],
         coursesCreated: [],
@@ -370,11 +383,30 @@ async function seed({ mongoUri } = {}) {
     usersByEmail[seedUser.email] = user;
   }
 
+  const authorsByEmail = {};
+  for (const seedAuthor of SEED_AUTHORS) {
+    const passwordHash = await hashPassword(DEMO_PASSWORD);
+    const author = await Author.findOneAndUpdate(
+      { email: seedAuthor.email },
+      {
+        email: seedAuthor.email,
+        displayName: seedAuthor.displayName,
+        role: seedAuthor.role,
+        passwordHash: passwordHash,
+        country: country._id,
+        coursesEnrolled: [],
+        coursesCreated: [],
+      },
+      { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true },
+    );
+    authorsByEmail[seedAuthor.email] = author;
+  }
+
   const courses = [];
   let lessonCount = 0;
   let pageCount = 0;
   for (const courseData of SEED_COURSES) {
-    const creator = usersByEmail[courseData.creatorEmail];
+    const creator = authorsByEmail[courseData.creatorEmail];
     const course = await Course.create({
       creatorId: creator._id,
       name: courseData.name,
@@ -421,8 +453,8 @@ async function seed({ mongoUri } = {}) {
     await course.save();
     courses.push(course);
 
-    creator.coursesCreated.push(course._id);
-    await creator.save();
+    // creator.coursesCreated.push(course._id);
+    // await creator.save();
   }
 
   const learners = SEED_USERS.filter((u) => u.role === 'learner').map(
@@ -449,6 +481,7 @@ async function seed({ mongoUri } = {}) {
     `  Money   : ${money.name} (${money.coins.length} coins, ${money.notes.length} notes)`,
   );
   console.log(`  Users   : ${SEED_USERS.map((u) => u.email).join(', ')}`);
+  console.log(`  Author  : ${SEED_AUTHORS.map((u) => u.email).join(', ')}`);
   console.log(`             password: ${DEMO_PASSWORD}`);
   console.log(
     `  Courses : ${courses.map((c) => c.name).join(', ')} (${lessonCount} lessons, ${pageCount} pages)`,
@@ -460,6 +493,7 @@ async function seed({ mongoUri } = {}) {
     country,
     money,
     usersByEmail,
+    authorsByEmail,
     courses,
     lessonCount,
     pageCount,

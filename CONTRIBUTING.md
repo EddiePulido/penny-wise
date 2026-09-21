@@ -54,6 +54,23 @@ To lint the entire repo manually, run `npm run lefthook -- run pre-commit`
 
 Reference, [prettier lefthook](https://prettier.io/docs/precommit#option-5-lefthook).
 
+## Develop Branch
+
+The `develop` branch contains some tools to help the development of Penny Wise.
+
+- [Mongoose Studio](https://github.com/Automattic/mongoose#mongoose-studio) access with [http://localhost:5000/studio](http://localhost:5000/studio).
+- [Swagger Editor, UI and Codegen](https://swagger.io/docs/open-source-tools/swagger-editor/) For the moment configured with `pet-shop` project.
+- [Mongoose to Swagger](https://www.npmjs.com/package/mongoose-to-swagger) Node module to export from mongoose to swagger/openapi.
+
+### Swagger Editor
+Pre-built DockerHub image
+
+SwaggerEditor is available as a pre-built docker image hosted on docker.swagger.io.
+
+```
+$ docker pull docker.io/swaggerapi/swagger-editor:latest
+$ docker run -d -p 8080:80 --name swagger-editor docker.io/swaggerapi/swagger-editor:latest
+```
 ---
 
 If anything here is still unclear, please reach out to the team's Discord channel.
