@@ -23,10 +23,7 @@ const ModulesPage = () => {
     return (
       <main className='p-4 max-w-7xl mx-auto text-left bg-[var(--bg)] flex flex-col gap-8'>
         <section>
-          <Link
-            to='/modules'
-            className='text-sm text-gray-600 hover:underline'
-          >
+          <Link to='/modules' className='text-sm text-gray-600 hover:underline'>
             ← Back to modules
           </Link>
 
@@ -47,9 +44,7 @@ const ModulesPage = () => {
               >
                 <h3 className='text-lg font-bold'>{lesson.title}</h3>
 
-                <p className='text-sm text-gray-600'>
-                  {lesson.description}
-                </p>
+                <p className='text-sm text-gray-600'>{lesson.description}</p>
 
                 <p className='font-bold'>{lesson.duration} minutes →</p>
               </Link>
@@ -96,9 +91,7 @@ const ModulesPage = () => {
               >
                 <h3 className='text-lg font-bold'>{lesson.title}</h3>
 
-                <p className='text-sm text-gray-600'>
-                  {lesson.description}
-                </p>
+                <p className='text-sm text-gray-600'>{lesson.description}</p>
 
                 <p className='font-bold'>{lesson.duration} minutes →</p>
               </Link>
