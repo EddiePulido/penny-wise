@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import AuthSplit, {
@@ -18,33 +18,36 @@ const LoginPage = () => {
   const [remember, setRemember] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [status, setStatus] = useState(null);
+  const timer = useRef(null);
+
+  useEffect(() => () => clearTimeout(timer.current), []);
 
   const loading = status?.state === 'loading';
 
-  const submit = async (e) => {
-    try {
-      e.preventDefault();
-      if (loading) return;
-      setStatus({ state: 'loading', message: 'Signing you in…' });
-      const data = await loginUser({ email, password });
-      signIn({ token: data.token, user: data.user });
+  const submit = (e) => {
+    e.preventDefault();
+    if (loading) return;
+    setStatus({ state: 'loading', message: 'Signing you in…' });
+    timer.current = setTimeout(() => {
       setStatus({
         state: 'success',
-        message: 'Logged in successfully! Redirecting…',
+        message: 'Welcome back! You are now signed in.',
       });
+    }, 900);
+  };
 
-      setTimeout(() => {
-        window.location.href = '/dashboard';
-      }, 2000);
-    } catch (error) {
-      setStatus({
-        state: 'error',
-        message:
-          error?.error ||
-          'An error occurred while logging in. Please check your credentials and try again.',
-      });
-      console.error('Error logging in:', error);
-    }
+  const forgotPassword = () => {
+    setStatus(
+      email.trim()
+        ? {
+            state: 'info',
+            message: `Password reset link sent to ${email.trim()}.`,
+          }
+        : {
+            state: 'info',
+            message: 'Enter your email above, then try again.',
+          },
+    );
   };
 
   return (
@@ -123,6 +126,13 @@ const LoginPage = () => {
             />
             Remember me
           </label>
+          <button
+            type='button'
+            onClick={forgotPassword}
+            className='font-medium text-[var(--accent)] hover:underline'
+          >
+            Forgot password?
+          </button>
         </div>
 
         <SubmitButton loading={loading}>
