@@ -15,6 +15,11 @@ router.post('/', requireAuth, checkRole('author'), async (req, res, next) => {
       return res.status(400).json({ error: 'Course name is required' });
     }
 
+    const author = await Author.findById(req.user.id);
+    if (!author) {
+      return res.status(404).json({ error: 'Author not found' });
+    }
+
     const course = await Course.create({
       creatorId: req.user.id,
       name,
@@ -22,11 +27,13 @@ router.post('/', requireAuth, checkRole('author'), async (req, res, next) => {
       published: false,
     });
 
-    const author = await Author.findById(req.user.id);
-    if (author) {
-      if (!author.coursesMade.some((courseId) => courseId.equals(course._id))) {
-        author.coursesMade.push(course._id);
+    if (!author.coursesMade.some((courseId) => courseId.equals(course._id))) {
+      author.coursesMade.push(course._id);
+      try {
         await author.save();
+      } catch (err) {
+        await Course.findByIdAndDelete(course._id);
+        return next(err);
       }
     }
 
