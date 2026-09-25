@@ -2,19 +2,28 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const { Schema } = mongoose;
 
-const baseOptions = { 
+const baseOptions = {
   discriminatorKey: 'role',
   collection: 'users',
-  timestamps: true 
+  timestamps: true,
 };
 
-const userSchema = new Schema({
-  displayName: { type: String, required: true, trim: true },
-  email: { type: String, required: true, unique: true, trim: true, lowercase: true },
-  passwordHash: { type: String, required: true },
-  profilePic: { type: String, default: 'default-profile.png' },
-  country: { type: String, trim: true }
-}, baseOptions);
+const userSchema = new Schema(
+  {
+    displayName: { type: String, required: true, trim: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
+    },
+    passwordHash: { type: String, required: true },
+    profilePic: { type: String, default: 'default-profile.png' },
+    country: { type: String, trim: true },
+  },
+  baseOptions,
+);
 
 userSchema.methods.comparePassword = function comparePassword(candidate) {
   return bcrypt.compare(candidate, this.passwordHash);
@@ -33,24 +42,32 @@ userSchema.methods.toJSON = function toJSON() {
 
 const User = mongoose.model('User', userSchema);
 
-const Learner = User.discriminator('learner', new Schema({
-  coursesEnrolled: [{ type: Schema.Types.ObjectId, ref: 'Course' }],
-  currentStreak: { type: Number, default: 0 }, 
-  longestStreak: { type: Number, default: 0 },
-  level: { type: Number, default: 1, min: 1 },
-  experience: { type: Number, default: 0, min: 0 },
-  currentLives: { type: Number, default: 5, min: 0 },
-  
-  completedLessons: [{
-    lessonId: { type: Schema.Types.ObjectId, ref: 'Lesson' },
-    score: { type: Number, default: 0 },
-    completedAt: { type: Date, default: Date.now }
-  }]
-}));
+const Learner = User.discriminator(
+  'learner',
+  new Schema({
+    coursesEnrolled: [{ type: Schema.Types.ObjectId, ref: 'Course' }],
+    currentStreak: { type: Number, default: 0 },
+    longestStreak: { type: Number, default: 0 },
+    level: { type: Number, default: 1, min: 1 },
+    experience: { type: Number, default: 0, min: 0 },
+    currentLives: { type: Number, default: 5, min: 0 },
 
-const Author = User.discriminator('author', new Schema({
-  coursesMade: [{ type: Schema.Types.ObjectId, ref: 'Course' }],
-  bio: { type: String, trim: true, maxlength: 500 },
-}));
+    completedLessons: [
+      {
+        lessonId: { type: Schema.Types.ObjectId, ref: 'Lesson' },
+        score: { type: Number, default: 0 },
+        completedAt: { type: Date, default: Date.now },
+      },
+    ],
+  }),
+);
+
+const Author = User.discriminator(
+  'author',
+  new Schema({
+    coursesMade: [{ type: Schema.Types.ObjectId, ref: 'Course' }],
+    bio: { type: String, trim: true, maxlength: 500 },
+  }),
+);
 
 module.exports = { User, Learner, Author };

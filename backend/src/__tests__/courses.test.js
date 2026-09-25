@@ -5,7 +5,8 @@ const { setupTestDB, teardownTestDB, clearTestDB } = require('./setup');
 const app = createApp();
 
 beforeAll(async () => {
-  process.env.AUTHOR_SECRET_CODE = process.env.AUTHOR_SECRET_CODE || '1234567890ABCDEF';
+  process.env.AUTHOR_SECRET_CODE =
+    process.env.AUTHOR_SECRET_CODE || '1234567890ABCDEF';
   await setupTestDB();
 });
 
@@ -57,7 +58,7 @@ describe('POST /api/courses', () => {
     expect(res.status).toBe(400);
     expect(res.body.error).toBe('Course name is required');
   });
-    it('rejects a learner from creating a course', async () => {
+  it('rejects a learner from creating a course', async () => {
     const registerRes = await request(app).post('/api/auth/register').send({
       email: 'learner@example.com',
       password: 'password123',
