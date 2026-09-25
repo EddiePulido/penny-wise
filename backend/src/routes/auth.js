@@ -11,6 +11,9 @@ const sanitizeUser = (user) => ({
   email: user.email,
   displayName: user.displayName,
   role: user.role,
+  level: user.level,
+  avatar: user.profilePic,
+  country: user.country,
 });
 
 const registerLimiter =
@@ -90,12 +93,10 @@ router.post('/register', registerLimiter, async (req, res) => {
         !process.env.AUTHOR_SECRET_CODE ||
         process.env.AUTHOR_SECRET_CODE.length < 16
       ) {
-        return res
-          .status(500)
-          .json({
-            error:
-              'Server misconfiguration: Author registration is currently disabled.',
-          });
+        return res.status(500).json({
+          error:
+            'Server misconfiguration: Author registration is currently disabled.',
+        });
       }
 
       const providedHash = crypto
