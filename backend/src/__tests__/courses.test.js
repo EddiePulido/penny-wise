@@ -57,4 +57,20 @@ describe('POST /api/courses', () => {
     expect(res.status).toBe(400);
     expect(res.body.error).toBe('Course name is required');
   });
+    it('rejects a learner from creating a course', async () => {
+    const registerRes = await request(app).post('/api/auth/register').send({
+      email: 'learner@example.com',
+      password: 'password123',
+      displayName: 'Learner User',
+    });
+
+    expect(registerRes.status).toBe(201);
+
+    const res = await request(app)
+      .post('/api/courses')
+      .set('Authorization', `Bearer ${registerRes.body.token}`)
+      .send({ name: 'Unauthorized Course' });
+
+    expect(res.status).toBe(403);
+  });
 });
