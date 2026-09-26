@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.post('/', requireAuth, checkRole('author'), async (req, res, next) => {
   try {
-    const name = typeof req.body?.name === 'string' ? req.body.name.trim() : '';
+    const name = typeof req.body.name === 'string' ? req.body.name.trim() : '';
 
     if (!name) {
       return res.status(400).json({ error: 'Course name is required' });
